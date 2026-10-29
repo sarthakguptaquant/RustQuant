@@ -61,6 +61,13 @@
 //! ### Risk-Reward Metrics
 //!
 //! - [x] Risk-Reward Measures (Sharpe, Treynor, Sortino, etc)
+//!
+//! ### VaR Backtesting
+//!
+//! - [x] Kupiec proportion-of-failures test
+//! - [x] Christoffersen independence test
+//! - [x] Basel Committee traffic light
+//! - [x] Maximum Undetectable Lie diagnostic
 
 /// Statistical distributions.
 pub mod distributions;
@@ -86,6 +93,11 @@ pub use interpolation::*;
 /// Simple risk/reward measures.
 pub mod risk_reward;
 pub use risk_reward::*;
+
+/// VaR backtests (Kupiec, Christoffersen, Basel traffic light) and the
+/// Maximum Undetectable Lie diagnostic.
+pub mod var_backtest;
+pub use var_backtest::*;
 
 /// Root-finding routines.
 pub mod rootfinding;

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- VaR backtests (Kupiec proportion-of-failures, Christoffersen independence, Basel Committee traffic light) and the Maximum Undetectable Lie diagnostic in `RustQuant_math` ([@sarthakguptaquant](https://github.com/sarthakguptaquant))
+
 ## [0.2.9](https://github.com/avhz/RustQuant/compare/v0.2.8...v0.2.9) - 2024-10-27
 
 ### Added
