@@ -532,7 +532,10 @@ pub fn max_undetectable_understatement(
 
     let limit = candidates[limit_idx];
     let binding = if limit_idx > 0 {
-        let hits: Vec<bool> = ratio.iter().map(|&r| r > candidates[limit_idx - 1]).collect();
+        let hits: Vec<bool> = ratio
+            .iter()
+            .map(|&r| r > candidates[limit_idx - 1])
+            .collect();
         gate_failures(&hits, prob, crit, tests, ignore_too_few, window)
     } else {
         Vec::new()
@@ -612,7 +615,7 @@ mod tests_var_backtest {
 
     #[test]
     fn test_kupiec_all_exceptions() {
-        let test = kupiec_pof(&vec![true; 10], 0.1).unwrap();
+        let test = kupiec_pof(&[true; 10], 0.1).unwrap();
         assert_approx_equal!(test.statistic, -2.0 * 10.0 * 0.1_f64.ln(), 1e-10);
     }
 
@@ -625,7 +628,7 @@ mod tests_var_backtest {
 
     #[test]
     fn test_kupiec_input_validation() {
-        assert!(kupiec_pof(&vec![false; 10], 0.0).is_err());
+        assert!(kupiec_pof(&[false; 10], 0.0).is_err());
         assert!(kupiec_pof(&[], 0.01).is_err());
     }
 
@@ -639,10 +642,8 @@ mod tests_var_backtest {
         let pi01 = n01 / (n00 + n01);
         let pi11 = n11 / (n10 + n11);
         let pi = (n01 + n11) / 19.0;
-        let ll_alt = n00 * (1.0 - pi01).ln()
-            + n01 * pi01.ln()
-            + n10 * (1.0 - pi11).ln()
-            + n11 * pi11.ln();
+        let ll_alt =
+            n00 * (1.0 - pi01).ln() + n01 * pi01.ln() + n10 * (1.0 - pi11).ln() + n11 * pi11.ln();
         let ll_null = (n00 + n10) * (1.0 - pi).ln() + (n01 + n11) * pi.ln();
         let expected = -2.0 * (ll_null - ll_alt);
 
@@ -668,7 +669,7 @@ mod tests_var_backtest {
     #[test]
     fn test_christoffersen_no_exceptions_is_zero() {
         assert_eq!(
-            christoffersen_independence(&vec![false; 100])
+            christoffersen_independence(&[false; 100])
                 .unwrap()
                 .statistic,
             0.0
@@ -677,10 +678,7 @@ mod tests_var_backtest {
 
     #[test]
     fn test_christoffersen_single_observation() {
-        assert_eq!(
-            christoffersen_independence(&[true]).unwrap().statistic,
-            0.0
-        );
+        assert_eq!(christoffersen_independence(&[true]).unwrap().statistic, 0.0);
     }
 
     #[test]
@@ -733,7 +731,7 @@ mod tests_var_backtest {
 
     #[test]
     fn test_traffic_light_invalid_window() {
-        assert!(basel_traffic_light(&vec![false; 10], 0.01, Some(0)).is_err());
+        assert!(basel_traffic_light(&[false; 10], 0.01, Some(0)).is_err());
     }
 
     fn mul_sim() -> (Vec<f64>, Vec<f64>) {
@@ -747,7 +745,7 @@ mod tests_var_backtest {
             let t = i as f64;
             let sigma = 0.01 * (1.0 + 0.3 * (0.05 * t).sin().abs());
             // A pseudo-random-looking but fully deterministic residual.
-            let u = ((t * 12.9898).sin() * 43758.5453).fract();
+            let u = ((t * 12.9898).sin() * 43758.5453).rem_euclid(1.0);
             let z = (u - 0.5) * 3.4; // roughly in [-1.7, 1.7]
             returns.push(sigma * z);
             var.push(2.5 * sigma); // reported VaR comfortably above typical moves
@@ -889,9 +887,8 @@ mod tests_var_backtest {
             None
         )
         .is_err());
-        assert!(max_undetectable_understatement(
-            &ret, &var, 0.01, 1.5, &ALL_TESTS, true, None
-        )
-        .is_err());
+        assert!(
+            max_undetectable_understatement(&ret, &var, 0.01, 1.5, &ALL_TESTS, true, None).is_err()
+        );
     }
 }
